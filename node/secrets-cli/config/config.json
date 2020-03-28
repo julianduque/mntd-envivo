@@ -1,0 +1,13 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "secrets_dev.db"
+  },
+  "test": {
+    "dialect": "sqlite",
+    "storage": "secrets_dev.db"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL"
+  }
+}
