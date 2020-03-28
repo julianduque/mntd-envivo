@@ -6,32 +6,32 @@ require('dotenv').config()
 
 const minimist = require('minimist')
 const promptly = require('promptly')
-const { createDb } = require('./lib')
 const argv = minimist(process.argv.slice(2))
+const Sequelize = require("sequelize")
+
+const userController = require('./controllers/users.controller');
+const secretController = require('./controllers/secrets.controller');
 
 const promptPassword = () => promptly.password('Enter your password: ', { replace: '*' })
 
 async function main () {
-  const db = await createDb(process.env.DB_TYPE)
   const command = argv._.shift()
 
   switch (command) {
     case 'users:create':
       try {
-        const { user } = argv
-        const pass = await promptPassword()
-        await db.createUser(user, pass)
-        console.log(`${user} created`)
+        const newUser = await userController.createUser()
+        console.log(`${newUser.username} created with id: ${newUser.id}`)
       } catch (err) {
-        console.log(err)
-        throw new Error('Cannot create user')
+        if (err instanceof Sequelize.UniqueConstraintError) throw new Error('Username already exists')
+        else throw new Error('Cannot create user')
       }
       break
     case 'users:list':
       try {
-        const results = await db.listUsers()
-        results.users.forEach(u => {
-          console.log(`- ${u.user}`)
+        const results = await userController.listUsers()
+        results.rows.forEach(u => {
+          console.log(`- ${u.username}`)
         })
         console.log(`\tTotal: ${results.count}`)
       } catch (err) {
@@ -42,14 +42,14 @@ async function main () {
       try {
         const { user, name, value } = argv
         const pass = await promptPassword()
-        const isAuth = await db.authenticate(user, pass)
+        const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await db.createSecret(user, pass, name, value)
-        console.log(`secret: ${name} created`)
+        const secret = await secretController.createSecret(isAuth, pass, name, value)
+        console.log(`secret: ${secret.name} created for user '${isAuth.username}'`)
       } catch (err) {
-        console.log(err)
-        throw new Error('Cannot create secret')
+        if (err instanceof Sequelize.UniqueConstraintError) throw new Error('Secret name already exists')
+        else throw new Error('Cannot create secret')
       }
       break
     case 'secrets:list':
@@ -57,13 +57,14 @@ async function main () {
         const { user } = argv
 
         const pass = await promptPassword()
-        const isAuth = await db.authenticate(user, pass)
+        const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        const secrets = await db.listSecrets(user)
-        secrets.forEach(s => {
+        const secrets = await secretController.listSecrets(user)
+        secrets.rows.forEach(s => {
           console.log(`- ${s.name}`)
         })
+        console.log(`\tTotal: ${secrets.count}`)
       } catch (err) {
         throw new Error('Cannot list secrets')
       }
@@ -72,10 +73,10 @@ async function main () {
       try {
         const { user, name } = argv
         const pass = await promptPassword()
-        const isAuth = await db.authenticate(user, pass)
+        const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        const secret = await db.getSecret(user, pass, name)
+        const secret = await secretController.getSecret(isAuth, pass, name);
         if (!secret) return console.log(`secret ${name} not found`)
         console.log(`- ${secret.name} = ${secret.value}`)
       } catch (err) {
@@ -86,13 +87,14 @@ async function main () {
     case 'secrets:update':
       try {
         const { user, name, value } = argv
-        const pass = promptPassword()
-        const isAuth = await db.authenticate(user, pass)
+        const pass = await promptPassword()
+        const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await db.updateSecret(user, name, value)
+        await secretController.updateSecret(isAuth, pass, name, value);
         console.log(`secret ${name} updated`)
       } catch (err) {
+        console.error(err);
         throw new Error('Cannot update secret')
       }
       break
@@ -100,10 +102,10 @@ async function main () {
       try {
         const { user, name } = argv
         const pass = await promptPassword()
-        const isAuth = await db.authenticate(user, pass)
+        const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await db.deleteSecret(user, name)
+        await secretController.deleteSecret(isAuth, name);
         console.log(`secret ${name} deleted`)
       } catch (err) {
         throw new Error('Cannot delete secret')
