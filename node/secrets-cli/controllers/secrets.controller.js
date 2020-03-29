@@ -1,5 +1,5 @@
 const db = require('../models')
-const { hashPassword, comparePassword, generateKey, generateRandomKey, encrypt, decrypt } = require('../lib/crypto')
+const {  generateKey, encrypt, decrypt } = require('../lib/crypto')
 
 module.exports = {
     async createSecret(user, pass, name, value) {
