@@ -2,7 +2,7 @@
 
 const path = require('path')
 
-function createDb (type) {
+function createDb (type = 'sequelize') {
   const db = require(path.join(__dirname, `${type}.js`))
   return db.createDb()
 }

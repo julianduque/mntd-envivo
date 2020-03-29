@@ -18,9 +18,9 @@ async function main () {
   switch (command) {
     case 'users:create':
       try {
-        const { user } = argv
+        const { user, name } = argv
         const pass = await promptPassword()
-        await db.createUser(user, pass)
+        await db.createUser(user, pass, name)
         console.log(`${user} created`)
       } catch (err) {
         console.log(err)
@@ -86,11 +86,11 @@ async function main () {
     case 'secrets:update':
       try {
         const { user, name, value } = argv
-        const pass = promptPassword()
+        const pass = await promptPassword()
         const isAuth = await db.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await db.updateSecret(user, name, value)
+        await db.updateSecret(user, name, value, pass)
         console.log(`secret ${name} updated`)
       } catch (err) {
         throw new Error('Cannot update secret')

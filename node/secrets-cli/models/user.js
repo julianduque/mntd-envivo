@@ -4,8 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     fullName: {
-      type: DataTypes.STRING
-    }
+      type: DataTypes.STRING,
+      field: 'full_name'
+    },
+    randomkey: DataTypes.STRING
   }, {
     underscored: true,
     tableName: 'users'
