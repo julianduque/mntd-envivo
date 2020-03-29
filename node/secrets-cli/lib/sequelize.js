@@ -63,8 +63,9 @@ async function createUser (username, passwd, fullName) {
 }
 
 async function listUsers () {
-  const res = await db.User.findAndCountAll()
-  const users = res.toJSON()
+  const users = await db.User.findAndCountAll({
+    attributes: ['username']
+  })
   return {
     count: users.count,
     users: users.rows

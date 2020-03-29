@@ -31,10 +31,11 @@ async function main () {
       try {
         const results = await db.listUsers()
         results.users.forEach(u => {
-          console.log(`- ${u.user}`)
+          console.log(`- ${u.username}`)
         })
         console.log(`\tTotal: ${results.count}`)
       } catch (err) {
+        console.log(err)
         throw new Error('Cannot list user')
       }
       break
