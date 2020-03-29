@@ -17,6 +17,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      randomkey: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       full_name: {
         allowNull: true,
         type: Sequelize.STRING
