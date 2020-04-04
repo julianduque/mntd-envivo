@@ -7,10 +7,10 @@ require('dotenv').config()
 const minimist = require('minimist')
 const promptly = require('promptly')
 const argv = minimist(process.argv.slice(2))
-const Sequelize = require("sequelize")
+const Sequelize = require('sequelize')
 
-const userController = require('./controllers/users.controller');
-const secretController = require('./controllers/secrets.controller');
+const userController = require('./controllers/users.controller')
+const secretController = require('./controllers/secrets.controller')
 
 const promptPassword = () => promptly.password('Enter your password: ', { replace: '*' })
 
@@ -76,7 +76,7 @@ async function main () {
         const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        const secret = await secretController.getSecret(isAuth, pass, name);
+        const secret = await secretController.getSecret(isAuth, pass, name)
         if (!secret) return console.log(`secret ${name} not found`)
         console.log(`- ${secret.name} = ${secret.value}`)
       } catch (err) {
@@ -91,10 +91,10 @@ async function main () {
         const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await secretController.updateSecret(isAuth, pass, name, value);
+        await secretController.updateSecret(isAuth, pass, name, value)
         console.log(`secret ${name} updated`)
       } catch (err) {
-        console.error(err);
+        console.error(err)
         throw new Error('Cannot update secret')
       }
       break
@@ -105,7 +105,7 @@ async function main () {
         const isAuth = await userController.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await secretController.deleteSecret(isAuth, name);
+        await secretController.deleteSecret(isAuth, name)
         console.log(`secret ${name} deleted`)
       } catch (err) {
         throw new Error('Cannot delete secret')
