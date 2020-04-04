@@ -5,14 +5,12 @@ const minimist = require('minimist')
 const promptly = require('promptly')
 const { comparePassword } = require('../lib/crypto')
 const argv = minimist(process.argv.slice(2))
-const promptPassword = () => promptly.password('Enter your password: ', { replace: '*' })
 
 module.exports = {
-  async createUser () {
-    const { user } = argv
-    const password = await promptPassword()
+  async createUser (username, password) {
+    
     return db.User.create({
-      username: user,
+      username,
       password
     })
   },
