@@ -1,5 +1,5 @@
 'use strict'
-const { hashPassword, generateRandomKey } = require('../lib/crypto');
+const { hashPassword, generateRandomKey } = require('../lib/crypto')
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     fullName: {
       type: DataTypes.STRING
     },
-    randomKey: DataTypes.STRING,
+    randomKey: DataTypes.STRING
   }, {
     underscored: true,
     tableName: 'users',
-    hooks: {
+    hooks: {
       beforeCreate: async (user, options) => {
         user.password = await hashPassword(user.password)
         user.randomKey = await generateRandomKey()

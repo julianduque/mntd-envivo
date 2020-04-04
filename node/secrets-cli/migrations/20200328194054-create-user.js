@@ -23,7 +23,7 @@ module.exports = {
       },
       random_key: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
