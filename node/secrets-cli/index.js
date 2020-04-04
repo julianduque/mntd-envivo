@@ -20,7 +20,9 @@ async function main () {
   switch (command) {
     case 'users:create':
       try {
-        const newUser = await userController.createUser()
+        const { user } = argv
+        const password = await promptPassword()
+        const newUser = await userController.createUser(user, password)
         console.log(`${newUser.username} created with id: ${newUser.id}`)
       } catch (err) {
         if (err instanceof Sequelize.UniqueConstraintError) throw new Error('Username already exists')
