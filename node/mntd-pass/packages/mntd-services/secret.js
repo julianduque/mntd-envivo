@@ -1,16 +1,21 @@
 'use strict'
 
 const db = require('@mntd/db')
+const { getSecretKey } = require('@mntd/auth')
 const { generateKey, encrypt, decrypt } = require('@mntd/crypto')
 
 module.exports = {
-  createSecret (user, password, name, value) {
-    const secretKey = generateKey(password)
+  async createSecret (username, password, name, value) {
+    const user = await db.User.findOne({ where: { username } })
+
+    if (!user) throw new Error('User not found')
+
+    const secretKey = await getSecretKey(username, password)
     const randomKey = user.randomKey
     const encrypted = encrypt(value, secretKey, randomKey)
 
     return db.Secret.create({
-      username: user.username,
+      username,
       name,
       value: encrypted
     })

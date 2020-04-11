@@ -2,6 +2,7 @@ const { Command } = require('@oclif/command')
 
 class SecretsCommand extends Command {
   async run () {
+    this._help()
   }
 }
 

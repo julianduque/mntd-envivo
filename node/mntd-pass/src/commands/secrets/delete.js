@@ -17,6 +17,7 @@ class SecretsDeleteCommand extends Command {
 
       await secretServices.deleteSecret(user, name)
       this.log(`secret ${name} deleted`)
+      this.exit(0)
     } catch (err) {
       if (err instanceof CLIError) {
         throw err

@@ -19,6 +19,7 @@ class UsersListCommand extends Command {
       })
 
       this.log(`Total: ${results.count}`)
+      this.exit(0)
     } catch (err) {
       console.log(err)
       throw new Error('Cannot list users')
