@@ -16,13 +16,14 @@ class UsersCreateCommand extends Command {
     try {
       const newUser = await userServices.createUser(username, password, fullName)
       this.log(`${newUser.username} created with id: ${newUser.id}`)
-      this.exit(0)
     } catch (err) {
       if (err instanceof Sequelize.UniqueConstraintError) {
         throw new CLIError('Username already exists')
       } else {
         throw new CLIError('Cannot create user')
       }
+    } finally {
+      this.exit(0)
     }
   }
 }

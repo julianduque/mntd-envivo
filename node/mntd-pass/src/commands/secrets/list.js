@@ -32,9 +32,10 @@ class SecretsListCommand extends Command {
       if (err instanceof CLIError) {
         throw err
       } else {
-        this.log(err)
         throw new CLIError('Cannot list secrets')
       }
+    } finally {
+      this.exit(0)
     }
   }
 }
