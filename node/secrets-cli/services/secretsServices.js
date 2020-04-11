@@ -3,8 +3,8 @@
 const db = require('../models')
 const { generateKey, encrypt, decrypt } = require('../lib/crypto')
 
-async function create (user, password, name, value) {
-  const { username, randomKey } = user
+async function create (user, name, value) {
+  const { username, password, randomKey } = user
   const secretKey = generateKey(password)
   const encrypted = encrypt(value, secretKey, randomKey)
   const secret = db.Secret.build({ username, name, value: encrypted })
@@ -17,8 +17,8 @@ async function list (user) {
   return secrets
 }
 
-async function getSecrets (user, password, name) {
-  const { username, randomKey } = user
+async function getSecrets (user, name) {
+  const { username, password, randomKey } = user
   const result = await db.Secret.findOne({ where: { username, name } })
 
   if (!result) return null
@@ -34,8 +34,8 @@ async function getSecrets (user, password, name) {
   }
 }
 
-async function update (user, password, name, value) {
-  const { username, randomKey } = user
+async function update (user, name, value) {
+  const { username, password, randomKey } = user
   const secretKey = generateKey(password)
   const encrypted = encrypt(value, secretKey, randomKey)
 

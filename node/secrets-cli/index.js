@@ -46,7 +46,8 @@ async function main () {
         const isAuth = await authServices.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        const secret = await secretsServices.create(isAuth, pass, name, value)
+        isAuth.password = pass
+        const secret = await secretsServices.create(isAuth, name, value)
         console.log(secret.toJSON())
         console.log(`secret: ${name} created for user '${isAuth.username}'`)
       } catch (err) {
@@ -79,7 +80,8 @@ async function main () {
         const isAuth = await authServices.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        const secret = await secretsServices.getSecrets(isAuth, pass, name)
+        isAuth.password = pass
+        const secret = await secretsServices.getSecrets(isAuth, name)
         if (!secret) return console.log(`secret ${name} not found`)
 
         console.log(`name: ${secret.name}, value: ${secret.value}`)
@@ -94,7 +96,8 @@ async function main () {
         const isAuth = await authServices.authenticate(user, pass)
         if (!isAuth) throw new Error('Invalid user or password')
 
-        await secretsServices.update(isAuth, pass, name, value)
+        isAuth.password = pass
+        await secretsServices.update(isAuth, name, value)
         console.log(`secret ${name} updated`)
       } catch (err) {
         throw new Error('Cannot update secret')
