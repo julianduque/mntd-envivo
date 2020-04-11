@@ -1,15 +1,16 @@
 'use strict'
 
-const { Command } = require('@oclif/command')
+const { Command, flags } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
 const { cli } = require('cli-ux')
 const { AUTHENTICATED, isAuthenticated, authenticate } = require('@mntd/auth')
 const { secretServices } = require('@mntd/services')
+const clipboardy = require('clipboardy')
 
 class SecretsGetCommand extends Command {
   async run () {
     try {
-      const { args } = this.parse(SecretsGetCommand)
+      const { args, flags } = this.parse(SecretsGetCommand)
       const { username, name } = args
 
       let password = AUTHENTICATED
@@ -23,14 +24,20 @@ class SecretsGetCommand extends Command {
       const secret = await secretServices.getSecret(username, password, name)
       if (!secret) throw new CLIError(`secret ${name} not found`)
 
-      cli.table([secret], {
-        name: {
-          minWidth: 10
-        },
-        value: {
-          minWidth: 12
-        }
-      })
+      if (flags.copy) {
+        cli.action.start('Copying to clipboard')
+        clipboardy.writeSync(secret.value)
+        cli.action.stop('Copied to clipboard')
+      } else {
+        cli.table([secret], {
+          name: {
+            minWidth: 10
+          },
+          value: {
+            minWidth: 12
+          }
+        })
+      }
     } catch (err) {
       if (err instanceof CLIError) {
         throw err
@@ -44,7 +51,9 @@ class SecretsGetCommand extends Command {
 }
 
 SecretsGetCommand.description = 'Lists secrets by username'
-SecretsGetCommand.flags = {}
+SecretsGetCommand.flags = {
+  copy: flags.boolean({ char: 'c' })
+}
 SecretsGetCommand.args = [
   { name: 'username', required: true },
   { name: 'name', required: true }

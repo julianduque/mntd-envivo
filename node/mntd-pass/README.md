@@ -96,6 +96,9 @@ Lists secrets by username
 ```
 USAGE
   $ mntd-pass secrets:get USERNAME NAME
+
+OPTIONS
+  -c, --copy
 ```
 
 _See code: [src/commands/secrets/get.js](https://github.com/julianduque/mntd-pass/blob/v1.0.0/src/commands/secrets/get.js)_
@@ -113,7 +116,7 @@ _See code: [src/commands/secrets/list.js](https://github.com/julianduque/mntd-pa
 
 ## `mntd-pass secrets:update USERNAME NAME`
 
-Delete a secret by username and name
+Update a secret by username and name
 
 ```
 USAGE
