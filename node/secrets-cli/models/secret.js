@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
     tableName: 'secrets'
   })
+
   Secret.associate = function (models) {
     Secret.belongsTo(models.User, {
       targetKey: 'username',
