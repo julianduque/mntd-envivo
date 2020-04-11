@@ -18,6 +18,7 @@ class SecretsUpdateCommand extends Command {
       const value = await cli.prompt('Enter your new secret', { type: 'mask' })
       await secretServices.updateSecret(user, password, name, value)
       this.log(`secret ${name} updated`)
+      this.exit(0)
     } catch (err) {
       if (err instanceof CLIError) {
         throw err

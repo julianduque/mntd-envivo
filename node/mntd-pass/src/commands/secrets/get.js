@@ -26,6 +26,7 @@ class SecretsGetCommand extends Command {
           minWidth: 12
         }
       })
+      this.exit(0)
     } catch (err) {
       if (err instanceof CLIError) {
         throw err

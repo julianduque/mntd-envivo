@@ -4,29 +4,34 @@ const { Command } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
 const { cli } = require('cli-ux')
 const { Sequelize } = require('@mntd/db')
-const { userServices, secretServices } = require('@mntd/services')
+const { AUTHENTICATED, isAuthenticated, authenticate } = require('@mntd/auth')
+const { secretServices } = require('@mntd/services')
 
 class SecretsCreateCommand extends Command {
   async run () {
     try {
       const { args } = this.parse(SecretsCreateCommand)
       const { username, name } = args
-      const password = await cli.prompt('Enter your password', { type: 'hide' })
+      let password = AUTHENTICATED
+      if (!await isAuthenticated(username)) {
+        password = await cli.prompt('Enter your password', { type: 'hide' })
 
-      const user = await userServices.authenticate(username, password)
-
-      if (!user) throw new CLIError('Invalid user or password')
+        const user = await authenticate(username, password)
+        if (!user) throw new CLIError('Invalid user or password')
+      }
 
       const value = await cli.prompt('Enter your secret', { type: 'mask' })
-      const secret = await secretServices.createSecret(user, password, name, value)
+      const secret = await secretServices.createSecret(username, password, name, value)
 
-      this.log(`secret: ${secret.name} created for user '${user.username}'`)
+      this.log(`secret: ${secret.name} created for user '${username}'`)
+      this.exit(0)
     } catch (err) {
       if (err instanceof Sequelize.UniqueConstraintError) {
         throw new CLIError('Secret name already exists')
       } else if (err instanceof CLIError) {
         throw err
       } else {
+        this.log(err)
         throw new CLIError('Cannot create secret')
       }
     }

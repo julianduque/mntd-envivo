@@ -3,17 +3,21 @@
 const { Command } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
 const { cli } = require('cli-ux')
-const { userServices, secretServices } = require('@mntd/services')
+const { isAuthenticated, authenticate } = require('@mntd/auth')
+const { secretServices } = require('@mntd/services')
 
 class SecretsListCommand extends Command {
   async run () {
     try {
       const { args } = this.parse(SecretsListCommand)
       const { username } = args
-      const password = await cli.prompt('Enter your password', { type: 'hide' })
 
-      const user = await userServices.authenticate(username, password)
-      if (!user) throw new CLIError('Invalid user or password')
+      if (!await isAuthenticated(username)) {
+        const password = await cli.prompt('Enter your password', { type: 'hide' })
+
+        const user = await authenticate(username, password)
+        if (!user) throw new CLIError('Invalid user or password')
+      }
 
       const secrets = await secretServices.listSecrets(username)
       cli.table(secrets.rows, {
@@ -23,10 +27,12 @@ class SecretsListCommand extends Command {
       })
 
       this.log(`Total: ${secrets.count}`)
+      this.exit(0)
     } catch (err) {
       if (err instanceof CLIError) {
         throw err
       } else {
+        this.log(err)
         throw new CLIError('Cannot list secrets')
       }
     }

@@ -8,6 +8,7 @@
   },
   "bugs": "https://github.com/julianduque/mntd-pass/issues",
   "dependencies": {
+    "@mntd/auth": "file:packages/mntd-auth",
     "@mntd/crypto": "file:packages/mntd-crypto",
     "@mntd/db": "file:packages/mntd-db",
     "@mntd/services": "file:packages/mntd-services",
