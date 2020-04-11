@@ -24,16 +24,16 @@ class SecretsCreateCommand extends Command {
       const secret = await secretServices.createSecret(username, password, name, value)
 
       this.log(`secret: ${secret.name} created for user '${username}'`)
-      this.exit(0)
     } catch (err) {
       if (err instanceof Sequelize.UniqueConstraintError) {
         throw new CLIError('Secret name already exists')
       } else if (err instanceof CLIError) {
         throw err
       } else {
-        this.log(err)
         throw new CLIError('Cannot create secret')
       }
+    } finally {
+      this.exit(0)
     }
   }
 }
