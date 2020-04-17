@@ -3,7 +3,6 @@
 const { Command } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
 const { cli } = require('cli-ux')
-const { AUTHENTICATED, isAuthenticated, authenticate } = require('@mntd/auth')
 const { secretServices } = require('@mntd/services')
 
 class SecretsUpdateCommand extends Command {
@@ -12,16 +11,10 @@ class SecretsUpdateCommand extends Command {
       const { args } = this.parse(SecretsUpdateCommand)
       const { username, name } = args
 
-      let password = AUTHENTICATED
-      if (!await isAuthenticated(username)) {
-        password = await cli.prompt('Enter your password', { type: 'hide' })
-
-        const user = await authenticate(username, password)
-        if (!user) throw new CLIError('Invalid user or password')
-      }
+      await this.config.runHook('authenticate', { username })
 
       const value = await cli.prompt('Enter your new secret', { type: 'mask' })
-      await secretServices.updateSecret(username, password, name, value)
+      await secretServices.updateSecret(username, name, value)
       this.log(`secret ${name} updated`)
     } catch (err) {
       if (err instanceof CLIError) {

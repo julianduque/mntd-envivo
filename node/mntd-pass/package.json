@@ -43,6 +43,9 @@
   "main": "src/index.js",
   "oclif": {
     "commands": "./src/commands",
+    "hooks": {
+      "authenticate": "./src/hooks/auth/index.js"
+    },
     "bin": "mntd-pass",
     "plugins": [
       "@oclif/plugin-help"
