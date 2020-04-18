@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "extends": "standard",
   "parserOptions": {
     "ecmaVersion": 9
   }
 }
+=======
+  "extends": "standard,oclif"
+}
+>>>>>>> wip: create basic api
