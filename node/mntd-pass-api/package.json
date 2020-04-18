@@ -1,0 +1,36 @@
+{
+  "name": "mntd-pass-api",
+  "version": "1.0.0",
+  "description": "An API for mntd-pass",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server",
+    "start:dev": "nodemon server",
+    "lint": "standard --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mntd/auth": "file:packages/mntd-auth",
+    "@mntd/crypto": "file:packages/mntd-crypto",
+    "@mntd/db": "file:packages/mntd-db",
+    "@mntd/services": "file:packages/mntd-services",
+    "@plugins/authentication": "file:plugins/authentication",
+    "@routes/users": "file:routes/users",
+    "dotenv": "^8.2.0",
+    "fastify": "^2.13.1",
+    "fastify-helmet": "^3.0.2",
+    "pino-pretty": "^4.0.0"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2",
+    "nodemon": "^2.0.3",
+    "standard": "^14.3.3"
+  },
+  "standard": {
+    "ignore": [
+      "**/node_modules/**"
+    ]
+  }
+}

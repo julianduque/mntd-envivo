@@ -1,0 +1,19 @@
+{
+  "name": "@mntd/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "models/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ioredis": "^4.16.2",
+    "pg": "^8.0.2",
+    "sequelize": "^5.21.6",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.1.1"
+  }
+}
