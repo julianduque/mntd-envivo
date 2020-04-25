@@ -9,19 +9,14 @@ const port = process.env.PORT || 8080
 
 // Register Routes
 fastify
+  .register(require('fastify-helmet'))
   .register(require('@plugins/authentication'))
   .after(() => {
-    fastify.register(require('@routes/users'))
+    fastify
+      .register(require('@routes/users'))
+      .register(require('@routes/secrets'))
       .get('/', async (request, reply) => {
-        return { hello: 'world' }
-      })
-      .post('/', async (request, reply) => {
-        return { hello: 'world post' }
-      })
-      .get('/private', {
-        preValidation: fastify.auth([fastify.validateJWT])
-      }, async (request, reply) => {
-        return 'yays'
+        return { version: 'mntd-pass v0.1' }
       })
   })
 

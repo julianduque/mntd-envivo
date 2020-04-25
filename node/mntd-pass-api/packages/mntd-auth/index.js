@@ -1,33 +1,37 @@
 'use strict'
 
-const { User, redisClient } = require('@mntd/db')
+const { User, createRedisClient } = require('@mntd/db')
 const { comparePassword, generateKey } = require('@mntd/crypto')
 
-const AUTHENTICATED = Symbol('AUTHENTICATED')
+async function isAuthenticated (username) {
+  return await getSecretKey(username) != null
+}
+
+async function getSecretKey (username) {
+  const redisClient = createRedisClient()
+  const secretKey = await redisClient.get(username)
+  redisClient.disconnect()
+  return secretKey
+}
+
+async function authenticate (username, password) {
+  const user = await User.findOne({ where: { username } })
+  if (!user) return false
+
+  const hashed = user.password
+
+  if (await comparePassword(password, hashed)) {
+    const redisClient = createRedisClient()
+    await redisClient.set(username, generateKey(password), 'EX', 3 * 60)
+    redisClient.disconnect()
+    return user
+  }
+
+  return null
+}
 
 module.exports = {
-  AUTHENTICATED,
-  async isAuthenticated (username) {
-    return redisClient.get(username)
-  },
-  async getSecretKey (username, password) {
-    if (password === AUTHENTICATED) {
-      return redisClient.get(username)
-    } else {
-      return generateKey(password)
-    }
-  },
-  async authenticate (username, password) {
-    const user = await User.findOne({ where: { username } })
-    if (!user) return false
-
-    const hashed = user.password
-
-    if (await comparePassword(password, hashed)) {
-      await redisClient.set(username, generateKey(password), 'EX', 3 * 60)
-      return user
-    }
-
-    return null
-  }
+  isAuthenticated,
+  getSecretKey,
+  authenticate
 }

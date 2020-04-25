@@ -15,6 +15,7 @@ async function userRoutes (fastify, options) {
     $id: 'createUser',
     type: 'object',
     properties: {
+      username: { type: 'string' },
       password: { type: 'string' }
     },
     required: ['username', 'password']
@@ -26,6 +27,7 @@ async function userRoutes (fastify, options) {
   })
 
   fastify.get('/users', {
+    preValidation: fastify.auth([fastify.validateJWT]),
     schema: {
       response: {
         200: 'users#'
