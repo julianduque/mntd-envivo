@@ -25,8 +25,6 @@ class SecretsCreateCommand extends Command {
       } else {
         throw new CLIError('Cannot create secret')
       }
-    } finally {
-      this.exit(0)
     }
   }
 }

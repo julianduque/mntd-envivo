@@ -21,15 +21,13 @@ class SecretsListCommand extends Command {
       })
 
       this.log(`Total: ${secrets.count}`)
-      this.exit(0)
     } catch (err) {
       if (err instanceof CLIError) {
         throw err
       } else {
+        console.log(err)
         throw new CLIError('Cannot list secrets')
       }
-    } finally {
-      this.exit(0)
     }
   }
 }

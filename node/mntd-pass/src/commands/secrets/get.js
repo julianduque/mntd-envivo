@@ -37,8 +37,6 @@ class SecretsGetCommand extends Command {
       } else {
         throw new CLIError('Cannot get secret')
       }
-    } finally {
-      this.exit(0)
     }
   }
 }

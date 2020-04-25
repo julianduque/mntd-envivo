@@ -22,8 +22,6 @@ class UsersCreateCommand extends Command {
       } else {
         throw new CLIError('Cannot create user')
       }
-    } finally {
-      this.exit(0)
     }
   }
 }

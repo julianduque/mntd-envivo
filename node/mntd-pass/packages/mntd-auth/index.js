@@ -1,26 +1,37 @@
 'use strict'
 
-const { User, redisClient } = require('@mntd/db')
+const { User, createRedisClient } = require('@mntd/db')
 const { comparePassword, generateKey } = require('@mntd/crypto')
 
-module.exports = {
-  async isAuthenticated (username) {
-    return redisClient.get(username)
-  },
-  async getSecretKey (username) {
-    return redisClient.get(username)
-  },
-  async authenticate (username, password) {
-    const user = await User.findOne({ where: { username } })
-    if (!user) return false
+async function isAuthenticated (username) {
+  return await getSecretKey(username) != null
+}
 
-    const hashed = user.password
+async function getSecretKey (username) {
+  const redisClient = createRedisClient()
+  const secretKey = await redisClient.get(username)
+  redisClient.disconnect()
+  return secretKey
+}
 
-    if (await comparePassword(password, hashed)) {
-      await redisClient.set(username, generateKey(password), 'EX', 3 * 60)
-      return user
-    }
+async function authenticate (username, password) {
+  const user = await User.findOne({ where: { username } })
+  if (!user) return false
 
-    return null
+  const hashed = user.password
+
+  if (await comparePassword(password, hashed)) {
+    const redisClient = createRedisClient()
+    await redisClient.set(username, generateKey(password), 'EX', 3 * 60)
+    redisClient.disconnect()
+    return user
   }
+
+  return null
+}
+
+module.exports = {
+  isAuthenticated,
+  getSecretKey,
+  authenticate
 }

@@ -1,4 +1,5 @@
 const { Command } = require('@oclif/command')
+const { CLIError } = require('@oclif/errors')
 const { cli } = require('cli-ux')
 const { userServices } = require('@mntd/services')
 
@@ -20,9 +21,7 @@ class UsersListCommand extends Command {
 
       this.log(`Total: ${results.count}`)
     } catch (err) {
-      throw new Error('Cannot list users')
-    } finally {
-      this.exit(0)
+      throw new CLIError('Cannot list users')
     }
   }
 }
