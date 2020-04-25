@@ -5,12 +5,12 @@ const { getSecretKey } = require('@mntd/auth')
 const { encrypt, decrypt } = require('@mntd/crypto')
 
 module.exports = {
-  async createSecret (username, password, name, value) {
+  async createSecret (username, name, value) {
     const user = await db.User.findOne({ where: { username } })
 
     if (!user) throw new Error('User not found')
 
-    const secretKey = await getSecretKey(username, password)
+    const secretKey = await getSecretKey(username)
     const randomKey = user.randomKey
     const encrypted = encrypt(value, secretKey, randomKey)
 
@@ -25,12 +25,12 @@ module.exports = {
     return db.Secret.findAndCountAll({ where: { username } })
   },
 
-  async getSecret (username, password, name) {
+  async getSecret (username, name) {
     const user = await db.User.findOne({ where: { username } })
 
     if (!user) throw new Error('User not found')
 
-    const secretKey = await getSecretKey(username, password)
+    const secretKey = await getSecretKey(username)
     const randomKey = user.randomKey
     const secret = await db.Secret.findOne({
       where: {
@@ -51,12 +51,12 @@ module.exports = {
     }
   },
 
-  async updateSecret (username, password, name, value) {
+  async updateSecret (username, name, value) {
     const user = await db.User.findOne({ where: { username } })
 
     if (!user) throw new Error('User not found')
 
-    const secretKey = await getSecretKey(username, password)
+    const secretKey = await getSecretKey(username)
     const randomKey = user.randomKey
     const encrypted = encrypt(value, secretKey, randomKey)
 

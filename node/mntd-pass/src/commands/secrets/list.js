@@ -25,7 +25,6 @@ class SecretsListCommand extends Command {
       if (err instanceof CLIError) {
         throw err
       } else {
-        console.log(err)
         throw new CLIError('Cannot list secrets')
       }
     }

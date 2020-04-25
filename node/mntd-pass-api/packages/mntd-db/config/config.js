@@ -1,6 +1,5 @@
 'use strict'
 
-require('dotenv').config()
 const path = require('path')
 
 module.exports = {
@@ -14,10 +13,6 @@ module.exports = {
     storage: path.join(__dirname, 'secrets_dev.db')
   },
   production: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
-    dialectOptions: {
-      ssl: true
-    }
+    use_env_variable: 'DATABASE_URL'
   }
 }

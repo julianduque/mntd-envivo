@@ -3,7 +3,6 @@
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
-const Redis = require('ioredis')
 const basename = path.basename(__filename)
 const env = process.env.NODE_ENV || 'development'
 const config = require(path.join(__dirname, '..', 'config/config'))[env]
@@ -32,7 +31,6 @@ Object.keys(db).forEach(modelName => {
   }
 })
 
-db.redisClient = new Redis()
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
