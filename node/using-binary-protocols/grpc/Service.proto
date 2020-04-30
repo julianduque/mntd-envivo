@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service Chat {
+  rpc sendMessage(Message) returns (MessageReply) {}
+  rpc getHistory(Empty) returns (MessageHistory) {}
+  rpc getHistoryStream(Empty) returns (stream Message) {}
+}
+
+message Empty {}
+
+message Message {
+  string name = 1;
+  string content = 2;
+}
+
+message MessageReply {
+  bool status = 1;
+}
+
+message MessageHistory {
+  repeated Message messages = 1;
+}

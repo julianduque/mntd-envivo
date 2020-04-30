@@ -1,0 +1,30 @@
+{
+  "name": "using-binary-protocols",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.0.3",
+    "@grpc/proto-loader": "^0.5.4",
+    "@msgpack/msgpack": "^1.12.1",
+    "avsc": "^5.4.21",
+    "benchmark": "^2.1.4",
+    "express": "^4.17.1",
+    "express-msgpack": "^1.0.0",
+    "fastify": "^2.14.0",
+    "fastify-accepts-serializer": "^2.0.1",
+    "ioredis": "^4.16.3",
+    "microtime": "^3.0.0",
+    "msgpack5": "^4.2.1",
+    "pino-pretty": "^4.0.0"
+  },
+  "devDependencies": {
+    "standard": "^14.3.3"
+  }
+}

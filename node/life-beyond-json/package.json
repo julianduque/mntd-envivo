@@ -1,0 +1,24 @@
+{
+  "name": "life-beyond-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "encoding"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@msgpack/msgpack": "^1.12.1",
+    "avsc": "^5.4.21",
+    "benchmark": "^2.1.4",
+    "chalk": "^4.0.0",
+    "protobufjs": "^6.9.0"
+  },
+  "devDependencies": {
+    "standard": "^14.3.3"
+  }
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Package {
+  string name = 1;
+  bool private = 2;
+  string version = 3;
+  string main = 4;
+  string license = 5;
+  int32 value = 6;
+}
+
