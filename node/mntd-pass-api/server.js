@@ -10,6 +10,7 @@ const port = process.env.PORT || 8080
 // Register Routes
 fastify
   .register(require('fastify-helmet'))
+  .register(require('fastify-cors'))
   .register(require('@plugins/authentication'))
   .after(() => {
     fastify

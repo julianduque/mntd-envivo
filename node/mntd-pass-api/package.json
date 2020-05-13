@@ -22,6 +22,7 @@
     "dotenv": "^8.2.0",
     "fastify": "^2.13.1",
     "fastify-helmet": "^3.0.2",
+    "fastify-cors": "^3.0.3",
     "pino-pretty": "^4.0.0"
   },
   "devDependencies": {
