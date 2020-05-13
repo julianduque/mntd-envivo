@@ -2,13 +2,14 @@
 
 const { userServices } = require('@mntd/services')
 
-async function userRoutes (fastify, options) {
+async function userRoutes(fastify, options) {
   fastify.addSchema({
     $id: 'publicUser',
     type: 'object',
     properties: {
       username: { type: 'string' },
-      fullName: { type: 'string' }
+      fullName: { type: 'string' },
+      createdAt: { type: 'string' }
     }
   })
   fastify.addSchema({
@@ -26,30 +27,38 @@ async function userRoutes (fastify, options) {
     items: { $ref: 'publicUser#' }
   })
 
-  fastify.get('/users', {
-    preValidation: fastify.auth([fastify.validateJWT]),
-    schema: {
-      response: {
-        200: 'users#'
+  fastify.get(
+    '/users',
+    {
+      preValidation: fastify.auth([fastify.validateJWT]),
+      schema: {
+        response: {
+          200: 'users#'
+        }
       }
+    },
+    async (request, reply) => {
+      const users = await userServices.listUsers()
+      return users.rows
     }
-  }, async (request, reply) => {
-    const users = await userServices.listUsers()
-    return users.rows
-  })
+  )
 
-  fastify.post('/users', {
-    schema: {
-      body: 'createUser#',
-      response: {
-        201: 'publicUser#'
+  fastify.post(
+    '/users',
+    {
+      schema: {
+        body: 'createUser#',
+        response: {
+          201: 'publicUser#'
+        }
       }
+    },
+    async (request, reply) => {
+      const { username, password, fullName } = request.body
+      reply.code(201)
+      return userServices.createUser(username, password, fullName)
     }
-  }, async (request, reply) => {
-    const { username, password, fullName } = request.body
-    reply.code(201)
-    return userServices.createUser(username, password, fullName)
-  })
+  )
 }
 
 module.exports = userRoutes
