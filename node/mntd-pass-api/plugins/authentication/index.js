@@ -2,11 +2,23 @@
 
 const { authenticate } = require('@mntd/auth')
 const fp = require('fastify-plugin')
-
-async function authentication (fastify, options) {
+const messages = {
+  badRequestErrorMessage: 'Format is Authorization: Bearer [token]',
+  noAuthorizationInHeaderMessage: 'Autorization header is missing!',
+  authorizationTokenExpiredMessage: 'Authorization token expired',
+  // for the below message you can pass a sync function that must return a string as shown or a string
+  authorizationTokenInvalid: err => {
+    return `Authorization token is invalid: ${err.message}`
+  }
+}
+async function authentication(fastify, options) {
   fastify
     .register(require('fastify-jwt'), {
-      secret: 'supersecret'
+      secret: 'supersecret',
+      messages,
+      sign: {
+        expiresIn: 300
+      }
     })
     .register(require('fastify-auth'))
     .decorate('validateJWT', async (request, reply) => {
@@ -25,13 +37,17 @@ async function authentication (fastify, options) {
       }
     })
     .after(() => {
-      fastify.post('/auth', {
-        preValidation: fastify.auth([fastify.validateUserPassword])
-      }, async (request, reply) => {
-        const user = request.user
-        const token = fastify.jwt.sign({ user })
-        return token
-      })
+      fastify.post(
+        '/auth',
+        {
+          preValidation: fastify.auth([fastify.validateUserPassword])
+        },
+        async (request, reply) => {
+          const user = request.user
+          const token = fastify.jwt.sign({ user })
+          return token
+        }
+      )
     })
 }
 
