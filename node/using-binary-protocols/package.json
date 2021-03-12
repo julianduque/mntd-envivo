@@ -21,7 +21,7 @@
     "fastify-accepts-serializer": "^2.0.1",
     "ioredis": "^4.16.3",
     "microtime": "^3.0.0",
-    "msgpack5": "^4.2.1",
+    "msgpack5": "^4.5.1",
     "pino-pretty": "^4.0.0"
   },
   "devDependencies": {
