@@ -1,0 +1,30 @@
+{
+  "name": "Package",
+  "type": "record",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "private",
+      "type": "boolean"
+    },
+    {
+      "name": "version",
+      "type": "string"
+    },
+    {
+      "name": "main",
+      "type": "string"
+    },
+    {
+      "name": "license",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": "int"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+record Package {
+  string name;
+  boolean private;
+  string version;
+  string main;
+  string license;
+  int value;
+}
