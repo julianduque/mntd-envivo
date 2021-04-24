@@ -1,0 +1,3 @@
+Hello
+Hola esto es STDIN
+Esto funciona como un tee basico?
