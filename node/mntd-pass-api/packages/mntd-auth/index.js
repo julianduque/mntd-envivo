@@ -22,7 +22,7 @@ async function authenticate (username, password) {
 
   if (await comparePassword(password, hashed)) {
     const redisClient = createRedisClient()
-    await redisClient.set(username, generateKey(password), 'EX', 3 * 60)
+    await redisClient.set(username, generateKey(password), 'EX', 30 * 60)
     redisClient.disconnect()
     return user
   }

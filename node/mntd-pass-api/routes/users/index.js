@@ -50,6 +50,15 @@ async function userRoutes (fastify, options) {
     reply.code(201)
     return userServices.createUser(username, password, fullName)
   })
+
+  fastify.put('/users', {
+    preValidation: fastify.auth([fastify.validateJWT])
+  }, async (request, reply) => {
+    const { user: username } = request.user
+    const { oldPassword, newPassword } = request.body
+    await userServices.changePassword(username, oldPassword, newPassword)
+    return { status: 'in process' }
+  })
 }
 
 module.exports = userRoutes

@@ -2,7 +2,7 @@
 
 const db = require('@mntd/db')
 const { getSecretKey } = require('@mntd/auth')
-const { encrypt, decrypt } = require('@mntd/crypto')
+const { encrypt, decrypt, generateRandomKey } = require('@mntd/crypto')
 
 module.exports = {
   async createSecret (username, name, value) {
@@ -72,5 +72,28 @@ module.exports = {
         name
       }
     })
+  },
+
+  async updateAllSecrets (username, oldKey, newKey) {
+    const user = await db.User.findOne({ where: { username } })
+    const oldRandomKey = user.randomKey
+    const newRandomKey = generateRandomKey()
+
+    user.randomKey = newRandomKey
+    await user.save()
+
+    const secrets = await db.Secret.findAll({
+      where: {
+        username
+      }
+    })
+
+    for (const secret of secrets) {
+      // TODO: Julian to fix this nasty bug
+      const encryptedValue = secret.value
+      const value = decrypt(encryptedValue, oldKey, oldRandomKey)
+      secret.value = encrypt(value, newKey, newRandomKey)
+      await secret.save()
+    }
   }
 }

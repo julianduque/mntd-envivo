@@ -6,11 +6,11 @@ const bcrypt = require('bcrypt')
 const algorithm = 'aes-256-cbc'
 const saltRounds = 5
 
-function hashPassword (pass) {
+async function hashPassword (pass) {
   return bcrypt.hash(pass, saltRounds)
 }
 
-function comparePassword (pass, hash) {
+async function comparePassword (pass, hash) {
   return bcrypt.compare(pass, hash)
 }
 

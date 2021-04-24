@@ -1,5 +1,7 @@
 'use strict'
 
+require('dotenv').config()
+
 const fastify = require('fastify')({
   logger: {
     prettyPrint: true
